@@ -72,6 +72,7 @@ class SoftmaxRegression(_baseNetwork):
         prob = self.softmax(scores)
         N = X.shape[0]
         loss = self.cross_entropy_loss(prob, y)
+        accuracy = self.compute_accuracy(prob, y)
 
 
         #############################################################################
@@ -89,8 +90,8 @@ class SoftmaxRegression(_baseNetwork):
         for i in range(N):
             prob[i, y[i]] -= 1
         dl_dt = prob / N
-        dl_dt = dl_dt * self.ReLU_dev(scores)
-        self.gradients['W1'] = np.dot(X.T, dl_dt)
+        gradient = dl_dt * self.ReLU_dev(scores)
+        self.gradients['W1'] = np.dot(X.T, gradient)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
