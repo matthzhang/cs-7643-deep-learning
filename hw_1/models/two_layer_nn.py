@@ -85,13 +85,13 @@ class TwoLayerNet(_baseNetwork):
         #    2) Compute Cross-Entropy Loss and batch accuracy based on network      #
         #       outputs                                                             #
         #############################################################################
-        layer_1 = X.dot(self.weights['W1']) + self.weights['b1']
-        sig = self.sigmoid(layer_1)
-        scores = sig.dot(self.weights['W2']) + self.weights['b2']
-        prob = self.softmax(scores)
+        Z_1 = X.dot(self.weights['W1']) + self.weights['b1']
+        A = self.sigmoid(Z_1)
+        Z_2 = A.dot(self.weights['W2']) + self.weights['b2']
+        P = self.softmax(Z_2)
         N = X.shape[0]
-        loss = self.cross_entropy_loss(prob, y)
-        accuracy = self.compute_accuracy(prob, y)
+        loss = self.cross_entropy_loss(P, y)
+        accuracy = self.compute_accuracy(P, y)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################
@@ -106,23 +106,26 @@ class TwoLayerNet(_baseNetwork):
         #          You may also want to implement the analytical derivative of      #
         #          the sigmoid function in self.sigmoid_dev first                   #
         #############################################################################
-        dl_dt = prob
+        
+        # dl_dw1 = dl_dp * dp_dz2 * dz2_dw2 * dw2_da * da_dz1 * dz1_dw1
+        
+        dl_dp = P
         for i in range(N):
-            dl_dt[i, y[i]] -= 1
-        dl_dt = dl_dt / N
+            dl_dp[i, y[i]] -= 1
+        dl_dz2 = dl_dp / N
 
         # scores = sig * W2 + b2
         # d_L/dW2 = sig.T * d_L/d_scores
         # d_L/db2 = sum over rows of d_L/d_scores
-        dW2 = sig.T.dot(dl_dt)
-        db2 = dl_dt.sum(axis=0)
+        dW2 = A.T.dot(dl_dp)
+        db2 = dl_dp.sum(axis=0)
 
         # backpropagate to hidden activations
         # d_L/d_sig = d_L/d_scores * W2.T
         # d_sig/d_layer1 = derivative of sigmoid
         # d_L/d_layer1 = d_L/d_sig * d_sig/d_layer1
-        dl_dsig = dl_dt.dot(self.weights['W2'].T)
-        dsig_dlay1 = self.sigmoid_dev(layer_1)
+        dl_da = dl_dz2.dot(self.weights['W2'].T)
+        dsig_dlay1 = self.sigmoid_dev(Z_1)
         dL_dlay1 = dl_dsig * dsig_dlay1
 
         # Same backpropagation step as second layer
