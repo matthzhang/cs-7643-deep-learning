@@ -107,35 +107,37 @@ class TwoLayerNet(_baseNetwork):
         #          the sigmoid function in self.sigmoid_dev first                   #
         #############################################################################
         
-        # dl_dw1 = dl_dp * dp_dz2 * dz2_dw2 * dw2_da * da_dz1 * dz1_dw1
+        # dl_dw2 = dl_dp * dp_dz2 * dz2_dw2
+        # dl_db2 = sum(dl_dp * dp_dz2)
+        # dl_dw1 = dl_dw2 * dw2_da * da_dz1 * dz1_dw1
+        # dl_db1 = sum(dl_dw2 * dw2_da * da_dz1)
         
+        #dl_dz2 = dl_dp * dp_dz2
         dl_dp = P
         for i in range(N):
             dl_dp[i, y[i]] -= 1
         dl_dz2 = dl_dp / N
 
-        # scores = sig * W2 + b2
-        # d_L/dW2 = sig.T * d_L/d_scores
-        # d_L/db2 = sum over rows of d_L/d_scores
-        dW2 = A.T.dot(dl_dp)
-        db2 = dl_dp.sum(axis=0)
+        # dl_dW2 = dl_dz2 * dz2_dw2
+        # dl_db2 = sum(dl_dz2)
+        dl_dW2 = A.T.dot(dl_dz2)
+        dl_db2 = dl_dz2.sum(axis=0)
 
-        # backpropagate to hidden activations
-        # d_L/d_sig = d_L/d_scores * W2.T
-        # d_sig/d_layer1 = derivative of sigmoid
-        # d_L/d_layer1 = d_L/d_sig * d_sig/d_layer1
+        # dl_da = dl_dz2 * dz2_da
         dl_da = dl_dz2.dot(self.weights['W2'].T)
-        dsig_dlay1 = self.sigmoid_dev(Z_1)
-        dL_dlay1 = dl_dsig * dsig_dlay1
 
-        # Same backpropagation step as second layer
-        dW1 = X.T.dot(dL_dlay1)
-        db1 = dL_dlay1.sum(axis=0)
+        # dl_dz1 = dl_da * da_dz1
+        dl_dz1 = dl_da * self.sigmoid_dev(Z_1)
 
-        self.gradients['W1'] = dW1
-        self.gradients['b1'] = db1
-        self.gradients['W2'] = dW2
-        self.gradients['b2'] = db2
+        # dl_dW1 = dl_dz1 * dz1_dw1
+        # dl_db1 = sum(dl_dz1)
+        dl_dW1 = X.T.dot(dl_dz1)
+        dl_db1 = dl_dz1.sum(axis=0)
+
+        self.gradients['W1'] = dl_dW1
+        self.gradients['b1'] = dl_db1
+        self.gradients['W2'] = dl_dW2
+        self.gradients['b2'] = dl_db2
 
         #############################################################################
         #                              END OF YOUR CODE                             #
