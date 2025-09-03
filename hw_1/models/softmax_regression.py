@@ -99,7 +99,7 @@ class SoftmaxRegression(_baseNetwork):
         dl_dz = dl_da * self.ReLU_dev(A)
         
         # dl_dw = dl_dz * dz_dw
-        self.gradients['W1'] = np.dot(dl_dz, X.T)
+        self.gradients['W1'] = np.dot(X.T, dl_dz)
         #############################################################################
         #                              END OF YOUR CODE                             #
         #############################################################################

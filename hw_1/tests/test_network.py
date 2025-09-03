@@ -35,15 +35,14 @@ class TestNetwork(unittest.TestCase):
         self.test_label = np.load('tests/softmax_grad_check/test_label.npy')
 
     def test_one_layer_softmax_relu(self):
-        return
-        # model = SoftmaxRegression()
-        # expected_loss = 2.3029
-        # expected_grad = np.load('tests/softmax_grad_check/softmax_relu_grad.npy')
-        # loss, _ = model.forward(self.test_batch, self.test_label, mode='train')
-        # w_grad = model.gradients['W1']
-        # self.assertAlmostEqual(expected_loss, loss, places=5)
-        # diff = np.sum(np.abs(expected_grad - w_grad))
-        # self.assertAlmostEqual(diff, 0)
+        model = SoftmaxRegression()
+        expected_loss = 2.3029
+        expected_grad = np.load('tests/softmax_grad_check/softmax_relu_grad.npy')
+        loss, _ = model.forward(self.test_batch, self.test_label, mode='train')
+        w_grad = model.gradients['W1']
+        self.assertAlmostEqual(expected_loss, loss, places=5)
+        diff = np.sum(np.abs(expected_grad - w_grad))
+        self.assertAlmostEqual(diff, 0)
 
     def test_two_layer_net(self):
         model = TwoLayerNet(hidden_size=128)
