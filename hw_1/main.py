@@ -42,7 +42,7 @@ def run():
     global args
     args = parser.parse_args()
     with open(args.config) as f:
-        config = yaml.load(f)
+        config = yaml.load(f, Loader=yaml.SafeLoader)
 
     for key in config:
         for k, v in config[key].items():
