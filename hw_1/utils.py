@@ -247,9 +247,9 @@ def plot_curves(train_loss_history, train_acc_history, valid_loss_history, valid
     plt.plot(valid_loss_history, label='Validation Loss')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
-    plt.title('Training and Validation Loss (Optimal)')
+    plt.title('Training and Validation Loss (Optiaml)')
     plt.legend()
-    plt.savefig('train_val_loss_curve_optimal.png')
+    plt.savefig('train_val_loss_curve.png')
 
     plt.figure(1)
     plt.plot(train_acc_history, label='Training Accuracy')
@@ -258,7 +258,7 @@ def plot_curves(train_loss_history, train_acc_history, valid_loss_history, valid
     plt.ylabel('Accuracy')
     plt.title('Training and Validation Accuracy (Optimal)')
     plt.legend()
-    plt.savefig('train_val_acc_curve_optimal.png')
+    plt.savefig('train_val_acc_curve.png')
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
