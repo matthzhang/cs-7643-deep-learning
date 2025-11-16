@@ -11,11 +11,6 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from Vocab import Vocab
 from GPTStyleTransformerLM import GPTStyleTransformerLM
 
-
-# -----------------------
-# 1. Config
-# -----------------------
-
 DATA_PATH = "Bitext_Sample_Customer_Support_Training_Dataset_27K_responses-v11.csv"
 
 try:
@@ -40,18 +35,8 @@ NUM_LAYERS = 6
 DIM_FF = 512
 DROPOUT = 0.1
 
-NUM_EPOCHS = 5          # increase for better results
+NUM_EPOCHS = 50          # increase for better results
 LR = 1e-4
-
-
-# -----------------------
-# 2. Tokenizer & Vocab
-# ----------------------
-
-
-# -----------------------
-# 3. Dataset
-# -----------------------
 
 class GPTStyleDataset(Dataset):
     """
@@ -338,8 +323,8 @@ def chat(model: GPTStyleTransformerLM, vocab: Vocab, max_new_tokens: int = 50):
 
 if __name__ == "__main__":
     # Train the GPT-style LM
-    # main()
+    main()
 
     # After training, you could do (in a separate script or REPL):
-    model, vocab = load_model_for_inference("gpt_style_customer_service_bot.pt")
-    chat(model, vocab, max_new_tokens=50)
+    # model, vocab = load_model_for_inference("gpt_style_customer_service_bot.pt")
+    # chat(model, vocab, max_new_tokens=50)
