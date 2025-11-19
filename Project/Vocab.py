@@ -8,7 +8,6 @@ class Vocab:
         self.stoi = {}
         self.itos = []
 
-        # Special tokens
         self.PAD = "<pad>"
         self.BOS = "<bos>"
         self.EOS = "<eos>"
@@ -45,7 +44,6 @@ class Vocab:
 
     def denumericalize(self, ids: List[int]) -> str:
         tokens = [self.itos[i] for i in ids]
-        # remove special tokens
         tokens = [t for t in tokens if t not in [self.BOS, self.EOS, self.PAD, self.SEP]]
         return " ".join(tokens)
 

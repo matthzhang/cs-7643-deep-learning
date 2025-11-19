@@ -25,10 +25,8 @@ class GPTStyleDataset(Dataset):
         instr_ids = self.vocab.numericalize(instr_text, add_bos_eos=False)
         resp_ids = self.vocab.numericalize(resp_text, add_bos_eos=False)
 
-        # Build full sequence: <bos> instr <sep> resp <eos>
         ids = [self.vocab.bos_idx] + instr_ids + [self.vocab.sep_idx] + resp_ids + [self.vocab.eos_idx]
 
-        # Truncate to max_len
         ids = ids[:self.max_len]
 
         return torch.tensor(ids, dtype=torch.long)

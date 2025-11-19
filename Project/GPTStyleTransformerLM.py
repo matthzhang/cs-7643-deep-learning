@@ -28,7 +28,7 @@ class GPTStyleTransformerLM(nn.Module):
             nhead=nhead,
             dim_feedforward=dim_feedforward,
             dropout=dropout,
-            batch_first=False,  # (S, N, E)
+            batch_first=False,
         )
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
 
@@ -68,6 +68,6 @@ class GPTStyleTransformerLM(nn.Module):
             mask=src_mask,
             src_key_padding_mask=key_padding_mask,
         )
-        encoded = encoded.transpose(0, 1)  # (batch, seq_len, d_model)
-        logits = self.generator(encoded)   # (batch, seq_len, vocab_size)
+        encoded = encoded.transpose(0, 1)
+        logits = self.generator(encoded)
         return logits
