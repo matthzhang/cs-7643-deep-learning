@@ -12,6 +12,7 @@ import sys
 from Vocab import Vocab
 from GPTStyleTransformerLM import GPTStyleTransformerLM
 from GPT2StyleTransformerLM import GPTStyle2TransformerLM
+from SmallDecoderSeq2SeqTransformerLM import SmallDecoderSeq2SeqTransformerLM
 
 DATA_PATH = "Bitext_Sample_Customer_Support_Training_Dataset_27K_responses-v11.csv"
 
@@ -232,6 +233,17 @@ def main(model_type):
             pad_idx=vocab.pad_idx,
             max_seq_len=MAX_SEQ_LEN,
         ).to(DEVICE)
+    elif model_type == 3:
+        model = SmallDecoderSeq2SeqTransformerLM(
+            vocab_size=len(vocab.itos),
+            d_model=D_MODEL,
+            nhead=NHEAD,
+            num_encoder_layers=NUM_LAYERS,
+            num_decoder_layers=2,  # Small decoder
+            dim_feedforward=DIM_FF,
+            dropout=DROPOUT,
+            pad_idx=vocab.pad_idx,
+        ).to(DEVICE)
     else:
         model = GPTStyleTransformerLM(
             vocab_size=len(vocab.itos),
@@ -306,6 +318,17 @@ def load_model_for_inference(checkpoint_path, model_type) -> Tuple[GPTStyleTrans
             pad_idx=config["pad_idx"],
             max_seq_len=config.get("max_seq_len", 2048),
         ).to(DEVICE)
+    elif model_type == 3:
+        model = SmallDecoderSeq2SeqTransformerLM(
+            vocab_size=len(vocab.itos),
+            d_model=config["d_model"],
+            nhead=config["nhead"],
+            num_encoder_layers=config["num_layers"],
+            num_decoder_layers=2,  # Small decoder
+            dim_feedforward=config["dim_feedforward"],
+            dropout=config["dropout"],
+            pad_idx=config["pad_idx"],
+        ).to(DEVICE)
     else:
         model = GPTStyleTransformerLM(
             vocab_size=len(vocab.itos),
@@ -334,6 +357,8 @@ def chat(model, vocab, max_new_tokens= 50):
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "2":
         model_type = 2
+    elif len(sys.argv) > 1 and sys.argv[1] == "3":
+        model_type = 3
     else:
         model_type = 1
     # Train the GPT-style LM
